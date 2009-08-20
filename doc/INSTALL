@@ -1,0 +1,66 @@
+Instalacija Tokyo Cabinet baze
+ - instalacija ukljucuje skidanje 2 paketa
+
+    * zlib : for loss-less data compression. 1.2.3 or later is suggested.
+    * bzip2 : for loss-less data compression. 1.0.5 or later is suggested.
+
+Na ubuntu 9.04 treba
+sudo apt-get install libbz2-dev
+
+kako bi se to instaliralo (bzip2 valjda)
+
+
+wget http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.31.tar.gz
+wget http://tokyocabinet.sourceforge.net/rubypkg/tokyocabinet-ruby-1.29.tar.gz
+tar -xvf tokyocabinet-1.4.31.tar.gz
+tar -xvf tokyocabinet-ruby-1.29.tar.gz
+
+u trenutku pisanja su to zadnje verzije (19.08.2009)
+
+
+Za tokyo cabinet:
+===============
+When an archive file of Tokyo Cabinet is extracted, change the current working directory to the generated directory and perform installation.
+
+Run the configuration script.
+
+./configure
+
+Build programs.
+
+make
+
+Perform self-diagnostic test.
+
+make check
+
+Install programs. This operation must be carried out by the root user.
+
+make install (sudo make install)
+
+
+Za ruby API
+============
+Ovaj dio iskreno ne znam da li treba
+ruby extconf.rb
+make
+sudo make install
+
+Ovaj treba da se to sve profura kao gem:
+gem build tokyocabinet.gemspec
+sudo gem install tokyocabinet-1.29.gem
+
+
+
+E sad, nakon toga to ne radi
+/usr/local/lib/site_ruby/1.8/i486-linux/tokyocabinet.so: libtokyocabinet.so.8: cannot open shared object file: No such file or directory - /usr/local/lib/site_ruby/1.8/i486-linux/tokyocabinet.so (LoadError)
+kad pobrisem taj fajl
+
+/usr/lib/ruby/gems/1.8/gems/tokyocabinet-1.29/./tokyocabinet.so: libtokyocabinet.so.8: cannot open shared object file: No such file or directory - /usr/lib/ruby/gems/1.8/gems/tokyocabinet-1.29/./tokyocabinet.so (LoadError)
+
+
+had to run this command to update the paths to the shared libraries.
+
+sudo ldconfig /usr/local/lib
+http://www.machinelake.com/2009/03/22/nerding-out-with-ruby-tokyo-cabinet-hpricot-twitter-sinatra-haml-passenger/
+
