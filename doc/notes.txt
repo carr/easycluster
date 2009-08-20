@@ -1,4 +1,4 @@
-= Tokyocabinet  
+= Tokyocabinet
 skines tokyocabinet
 ./configure
 make
@@ -10,3 +10,8 @@ napravis gem iz gemspeca
 instaliras gem
 
  ldconfig /usr/local/lib
+
+
+= Disable/enable lock kod sinatre
+Bitno je ostvariti multithreading
+
