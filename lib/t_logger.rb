@@ -1,9 +1,13 @@
+require "fileutils"
+
 class TLogger < Logger
   attr_reader :logger
   def initialize(file, stdout, verbose=false)
+    FileUtils.mkdir_p File.dirname(file)
+
     @logger = Logger.new(file, 10, 1024000) # 10 log fajlova po 1.024,000 byteova
     @logger.level = Logger::DEBUG
-	  @logger.datetime_format = "%Y-%m-%d %H:%M:%S"    
+	  @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
     @verbose = verbose
     @stdout = stdout
   end
@@ -11,11 +15,11 @@ class TLogger < Logger
   def debug(str)
     log(str, :debug)
   end
-  
+
   def info(str)
     log(str, :info)
   end
-  
+
   def fatal(str)
     log(str, :fatal)
   end
@@ -28,4 +32,5 @@ class TLogger < Logger
       @stdout.puts(str) if (@verbose or !(lvl == :info))
     end
   end
-end # of Class TLogger 
+end # of Class TLogger
+
