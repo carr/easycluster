@@ -1,0 +1,19 @@
+#status{
+    background-color: black;
+    color: white;
+    padding: 10px;	    
+    height: 400px;
+    overflow: scroll;
+    width: 800px;
+}
+#status em{
+    color: red;
+    font-style: normal;
+}
+#image{
+    float :right;
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    
+}

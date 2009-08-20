@@ -1,0 +1,12 @@
+= Tokyocabinet  
+skines tokyocabinet
+./configure
+make
+make check
+sudo make install
+
+skines ruby binding
+napravis gem iz gemspeca
+instaliras gem
+
+ ldconfig /usr/local/lib

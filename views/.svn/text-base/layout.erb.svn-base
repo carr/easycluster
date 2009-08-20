@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <script type="text/javascript" src="/mapreduce.js?lib=<%= @job_name %>&user=<%= params[:user]  %>"></script>    
+    <style type="text/css" media="screen">
+	/* <![CDATA[ */   @import url('/basic.css');    /* ]]>  */
+    </style> 
+  </head>
+
+  <body>
+    <div id="header">
+	<a href="/">Home</a> | <a href="/restart">RESTART!!!</a> | <a href="/stats">Stats</a> Hello, you are <strong><%= params[:user] %></strong>!
+    </div>
+    <%= yield %>
+  </body>
+</html>

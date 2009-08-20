@@ -1,0 +1,6 @@
+var json = {
+    phase : "map",
+    filename : ["<%= options[:file] %>"],    
+    data : ["<%= options[:data] %>"],
+    jobs_left: <%= options[:jobs_left] %>
+}
