@@ -15,3 +15,68 @@ instaliras gem
 = Disable/enable lock kod sinatre
 Bitno je ostvariti multithreading
 
+
+= Md5 crackanje
+
+osnovna ideja, brute force isprobati sve kombinacije, imamo ulazne parametre
+ - duljina stringa
+ - raspon indexa (0..MAX_INDEX)
+
+
+MAX_INDEX = broj_znamenki ^ duljina_stringa
+
+npr.
+broj znamenki = 64
+duljina stringa = 8
+broj varijacija = 281 474 976 710 656
+
+za obraditi 1000 varijacija ~ 2,7sekundi
+
+u minuti dakle mozemo obraditi ~ 20.000 varijacija
+
+dakle za obraditi ukupan broj varijacija treba nam 14073748835 minuta
+
+recimo da imamo 1000 racunala, to je 1407374 minuta, sto je jednako 234562 sati, sto je jednako 9773 dana
+
+sto jos uvijek nije realno, al jebiga
+
+
+* kljuc je dakle (input_length, min_index, max_index)
+* treba mi jos mogucnost dohvata taskova koji nisu obradjeni, u timeoutu su
+* a da mi to brisemo iz queua i jednostavno povecavamo broj i bok.
+
+dakle, dodje request, povecamo broj, spremimo u queue, kad dodje odgovor, obrisemo samo i zdravo.
+
+a jebemti, kakav tip baze ovdje trebam, key value ili sta? brijem da mi queue treba
+
+
+Rastavimo proces
+ - trebam moc zadati zadatak nekome (klijentu koji ima svoj ID). Taj klijent mi treba nakon nekog vremena vratiti rezultat (i ID svog zadatka da znam koji je)
+ Alternativno bi mozda mogao po IDu klijenta znati koji je zadatak imao, znaci da bi dohvat morao biti po client IDU.
+ U prvom slucaju ipak radimo dohvat po task_id, dakle moram imati nekakav jebeni key-value sistem.
+
+ Task_id mi treba uglavnom da mogu napraviti dohvat i : zatvoriti zadatak, zapisati rjesenje zadatka.
+
+ Ovdje mi je tokyo cabinet u redu. Ono sto mi nije u redu je sto ne mogu listati kroz sve open zadatke.
+ Zapravo mogu ako je "open" parametar dio kljuca, ali opet ne zelim traziti po njemu
+
+ - trebam moc prolistati "open" tasks da vidim da li je neki timeoutao, da ga mogu resendati nekom drugom. U ovom slucaju najbolja mi je obicna lista.
+
+ - U opcem slucaju lista zavrsenih zadataka bi bila ok, iako u md5 slucaju mi je dovoljno ga samo obrisati iz queuea.
+
+ -
+
+ Zadatak moze biti
+  - nije zadan
+  - u obradi (zadan je, ima svoj client_id)
+    - u timeoutu (zadan je, ima svoj client_id ali cemo ga resetirati)
+  - obradjen (zadan je, ima svoj client_id, ima i result)
+
+
+ Poveznica izmedju zadatka i klijenta je JobAssignment. Kolicina JobAssignmenta koje imamo u sistemu je zapravo broj zadataka u obradi.
+
+
+= 21.08
+Ok, proucio sam tokyo cabinet, ima vise nacina rada (key value store, binary + tree, table database) i za mene je najbolji table database jer podrzava
+dohvat po kljucu (dohvat specificnog zadatka), ali podrzava i dohvat po uvjetu (da li je zadatak finisiran ili ne).
+
