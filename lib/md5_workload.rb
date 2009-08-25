@@ -1,7 +1,7 @@
 #require "tokyocabinet"
 
 class Md5Workload
-  include TokyoCabinet
+#  include TokyoCabinet
 
   attr_accessor :job_name
 
