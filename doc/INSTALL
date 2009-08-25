@@ -20,22 +20,12 @@ u trenutku pisanja su to zadnje verzije (19.08.2009)
 
 Za tokyo cabinet:
 ===============
-When an archive file of Tokyo Cabinet is extracted, change the current working directory to the generated directory and perform installation.
-
-Run the configuration script.
-
+cd folder
 ./configure
-
-Build programs.
-
 make
-
-Perform self-diagnostic test.
-
 make check
 
 Install programs. This operation must be carried out by the root user.
-
 make install (sudo make install)
 
 
@@ -63,4 +53,32 @@ had to run this command to update the paths to the shared libraries.
 
 sudo ldconfig /usr/local/lib
 http://www.machinelake.com/2009/03/22/nerding-out-with-ruby-tokyo-cabinet-hpricot-twitter-sinatra-haml-passenger/
+
+
+= TokyoTyrant
+skines
+http://tokyocabinet.sourceforge.net/tyrantpkg/
+
+wget http://tokyocabinet.sourceforge.net/tyrantpkg/tokyotyrant-1.1.33.tar.gz
+
+skines
+http://tokyocabinet.sourceforge.net/tyrantrubypkg/
+wget http://tokyocabinet.sourceforge.net/tyrantrubypkg/tokyotyrant-ruby-1.12.tar.gz
+
+
+ruby binding za servera
+
+odkompresirati oboje
+
+za ovaj prvi
+./configure
+make
+sudo make install
+
+za ruby dio:
+sudo gem build tokyotyrant.gemspec
+sudo gem install tokyotyrant-1.12.gemspec
+
+
+u produkciji ga treba ufurati kao /opt/ruby_enterprise. .... ako se koristi REE, on vodi drugu gem listu
 

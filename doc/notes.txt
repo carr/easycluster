@@ -11,7 +11,6 @@ instaliras gem
 
  ldconfig /usr/local/lib
 
-
 = Disable/enable lock kod sinatre
 Bitno je ostvariti multithreading
 
@@ -28,7 +27,7 @@ MAX_INDEX = broj_znamenki ^ duljina_stringa
 npr.
 broj znamenki = 64
 duljina stringa = 8
-broj varijacija = 281 474 976 710 656
+broj varijacija = 281 474 976 710 656 (otprlike velicina hrvatskog deficita ove godine)
 
 za obraditi 1000 varijacija ~ 2,7sekundi
 
@@ -79,4 +78,41 @@ Rastavimo proces
 = 21.08
 Ok, proucio sam tokyo cabinet, ima vise nacina rada (key value store, binary + tree, table database) i za mene je najbolji table database jer podrzava
 dohvat po kljucu (dohvat specificnog zadatka), ali podrzava i dohvat po uvjetu (da li je zadatak finisiran ili ne).
+
+
+Ok, sad moram odluciti da li ce svaki pojedinacni proces pristupati izravno tokyo cabinetu, da li ce mu pristupati preko tokyo tyranta
+ili da li ce ici preko drb servera (sto je po meni korak bezveze).
+
+Iako, imam neke perzistentne varijable, recimo time started i ta sranja.
+
+
+= 24.08.
+Statisticki dio.
+
+* koliko je ukupno poslova bilo
+* kad je poceo kompletan posao (kad je prvi task poslan prvom klijentu)
+* kad je zavrsio kompletan posao (kad je zadnji task vracen od klijenta, kad je nadjen rezultat)
+* koliko poslova je otislo u timeout
+
+* Koliko je ukupno vrijeme klijentske obrade
+* Koliko je ukupno vrijeme potroseno na komunikaciju (i serverske stvari)
+* Koliko je ukupno vrijeme obrade (klijenti + komunikacija)
+* Postotak komunikacije
+
+Onda imamo listu klijenata, mozemo listati sve poslove koje su obradjivali ali to je suvisno.
+
+Zelimo sumarnu statistiku klijenata, dakle za svakog klijenta:
+* Name
+* Koji browser koristi
+* IP adresa
+* Koliko je poslova on obradio / postotak od ukupnih poslova
+* Faktor brzine obrade
+
+
+
+********** biljeska: u pocetku sam mislio da bi na serveru trebao voditi racuna o dynamic performance adjustmentu. ali zasto, zasto ne bi svaki klijentaza sebe
+pamtio koliko brzo rijesava zadatke i samo salje serveru, recimo AVG(zadnjih 10 izracuna). offloadajmo na klijenta sto god mozemo
+
+= Podesavanje performansi
+Ideja je snimati zadnjih 10 "brzina" obrade zadatka. Brzina je broj zadataka / vremenu. Te brzine saljemo serveru koji nam na osnovu toga salje zadatke.
 

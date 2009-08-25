@@ -2,7 +2,7 @@ require "tokyotyrant"
 include TokyoTyrant
 class Db < RDB
   [:min_range, :max_range, :result, :jobs_left, :time_started, :time_finished,
-    :hash, :word_size, :word, :digits_count, :duration, :client_processing_time,
+    :hash, :word_size, :word, :digits_count, :duration, :client_processing_time, :processing_time,
     :job_started, :client_number
   ].each do |name|
     class_eval %|
@@ -28,7 +28,7 @@ class Db < RDB
   def communication_percentage # ne valja
     return nil unless job_started
 
-    (duration - client_processing_time) *100 / duration
+    (processing_time - client_processing_time) *100 / processing_time
   end
 end
 

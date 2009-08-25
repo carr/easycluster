@@ -8,6 +8,9 @@ var LOG_VERY_IMPORTANT = 3;
 
 var logLevel = LOG_SHOW_ALL;
 
+var processingSpeeds = [];
+var PROCESSING_SPEEDS_LENGTH = 10;
+
 function emit(phase, data){
     $.post('/emit/' + phase + '?user=' + params.user, data, function(response){
 	    switch(phase){
@@ -19,6 +22,21 @@ function emit(phase, data){
 		    break;
 	    }
     });
+}
+
+function pushProcessingSpeed(speed){
+    processingSpeeds.push(speed);
+    if(processingSpeeds.length > PROCESSING_SPEEDS_LENGTH){
+        processingSpeeds.shift();
+    }
+}
+
+function getAverageProcessingSpeed(){
+    var sum = 0;
+    for(var i=0;i< processingSpeeds.length; i++){
+        sum+= processingSpeeds[i];
+    }
+    return sum / processingSpeeds.length;
 }
 
 function processResponse(response){
@@ -35,6 +53,8 @@ function processResponse(response){
         for(var index in json.jobs){
             var filename = json.jobs[index].filename;
             var data = json.jobs[index].data
+            var timeStarted = json.jobs[index].time_started;
+            var jobSize = json.jobs[index].job_size;
 
 //            status("Doing map for: " + filename + ", jobs left: " + jobs_left, LOG_IMPORTANT)
 
@@ -43,10 +63,19 @@ function processResponse(response){
             timeProcessingStarted = (new Date).getTime();
 
             var result = map(filename, data);
-            results['processing_time['+index+']'] = (new Date).getTime()-timeProcessingStarted;
-            results['result['+index+']'] = result;
+            var processingDuration = (new Date).getTime()-timeProcessingStarted;
 
-            status("Finished map job " + filename + " in " + results['processing_time['+index+']'] + ", jobs left: " + jobs_left, LOG_IMPORTANT);
+            pushProcessingSpeed(jobSize / processingDuration);
+
+            results['processing_time['+index+']'] = processingDuration;
+            results['result['+index+']'] = result;
+            results['time_started['+index+']'] = timeStarted;
+
+            if(processingSpeeds.length >= PROCESSING_SPEEDS_LENGTH){
+                results['processing_speed['+index+']'] = getAverageProcessingSpeed();
+            }
+
+            status("Finished map job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", jobs left: " + jobs_left, LOG_IMPORTANT);
             // status("result for map: " + result, LOG_NOT_IMPORTANT);
             processedTotal++;
         }

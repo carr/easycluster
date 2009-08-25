@@ -1,16 +1,22 @@
 <h1>Stats</h1>
 <dl>
+  <dt>Client number</dt>
+  <dd><%= @db.client_number %></dd>
+
   <dt>Client processing time</dt>
-  <dd><%= @db.client_processing_time%></dd>
+  <dd><%= @db.client_processing_time / 1000 %> sec</dd>
+
+  <dt>Processing time</dt>
+  <dd><%= @db.processing_time / 1000 %> sec</dd>
 
   <dt>Time started</dt>
-  <dd><%= @db.time_started %></dd>
+  <dd><%= Time.at(@db.time_started) %></dd>
 
   <dt>Time finished</dt>
-  <dd><%= @db.time_finished %></dd>
+  <dd><%= Time.at(@db.time_finished) %></dd>
 
   <dt>Duration</dt>
-  <dd><%= @db.duration %></dd>
+  <dd><%= @db.duration / 1000 %> sec</dd>
 
   <dt>Communication is<dt>
   <dd><%= @db.communication_percentage %>%</dd>

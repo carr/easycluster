@@ -34,7 +34,7 @@ function checkmd5(i, word_size, md5){
     for(var j=0;j<number.length;j++){
       str += letters[number[j]];
     }
-    status(str);
+//    status(str);
 
     if(hex_md5(str)==md5)
       return str;
@@ -51,45 +51,17 @@ function check_range(start, end, word_size, md5){
     return null;
 }
 
-function check(){
-  var word_size = 8;
-  var variations = Math.pow(letters.length, word_size);
-  status("variations " + variations + " for " + letters.length + " letters");
-
-  var input = 'aBB';
-  var hashResult = hex_md5(input);
-  status("result for " + input + " is " + hashResult)
-
-
-  return check_range(10000, 11000, word_size, hashResult);
-//  radixConvert(798, 77);
+function map(id, data){
+  var arr = id.split(";");
+  var res = check_range(parseInt(arr[1]), parseInt(arr[2]), parseInt(arr[0]), data['hash']);
+  return res;
 }
+function startTask(){
+    status("Started");
+    timeStart();
 
-function map(id, input){
-//    status("map " + input.join(";"));
-//    var bytes = input;
-//
-//    var compressed = [];
-//    var old_byte = bytes[0];
-//    var count = 0;
-//
-//    for(var i=0;i<bytes.length;i++){
-//      if(bytes[i]==old_byte){
-//        count+=1
-//      }else{
-//        compressed.push(old_byte);
-//        compressed.push(count / 256); // TODO roundanje ovog broja
-//        compressed.push(count % 256);
-//
-//        old_byte = bytes[i];
-//        count = 1;
-//      }
-//    }
-//
-//    compressed.push(old_byte);
-//    compressed.push(count / 256);
-//    compressed.push(count % 256);
-
-//    return compressed.join(";")
+    startWork();
+    bl = 0;
+    timeStop("rezultat " + bl);
 }
 
