@@ -1,4 +1,4 @@
-require "tokyocabinet"
+#require "tokyocabinet"
 
 class Md5Workload
   include TokyoCabinet
