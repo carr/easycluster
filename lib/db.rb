@@ -3,7 +3,7 @@ include TokyoTyrant
 class Db < RDB
   [:min_range, :max_range, :result, :jobs_left, :time_started, :time_finished,
     :hash, :word_size, :word, :digits_count, :duration, :client_processing_time, :processing_time,
-    :job_started, :client_number, :eta, :ten_processing_speeds, :processing_time_count
+    :job_started, :client_number, :eta, :processing_time_count, :eta_jobs_started, :eta_started
   ].each do |name|
     class_eval %|
       def #{name}
