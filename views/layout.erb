@@ -1,9 +1,11 @@
 <html>
   <head>
-    <script type="text/javascript" src="/mapreduce.js?lib=<%= @job_name %>&user=<%= params[:user]  %>"></script>    
+    <% if @include_javascript %>
+      <script type="text/javascript" src="/mapreduce.js?lib=<%= @job_name %>&user=<%= params[:user]  %>"></script>
+    <% end %>
     <style type="text/css" media="screen">
 	/* <![CDATA[ */   @import url('/basic.css');    /* ]]>  */
-    </style> 
+    </style>
   </head>
 
   <body>
@@ -13,3 +15,4 @@
     <%= yield %>
   </body>
 </html>
+
