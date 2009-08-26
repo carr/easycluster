@@ -18,8 +18,7 @@ class Deploy < Thor
 
 		Net::SSH.start("#{deploy_ip}", "#{deploy_user}", :port => "#{deploy_port}") do |ssh|
 			ssh.exec! "mkdir -p #{deploy_path}"
-			ssh.exec! "cd #{deploy_path}; git pull"
-			ssh.exec! "touch tmp/restart.txt"
+			ssh.exec! "cd #{deploy_path}; git pull; touch tmp/restart.txt"
 		end
 
 		puts "================================"

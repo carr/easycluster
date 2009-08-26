@@ -17,7 +17,7 @@ function emit(phase, data){
 	        case 'reduce':
 	        case 'finalize':
 	        case 'done':
-	          status("Finished emit!", LOG_NOT_IMPORTANT);
+	          //status("Finished emit!", LOG_NOT_IMPORTANT);
 		      processResponse(response);
 		    break;
 	    }
@@ -75,7 +75,7 @@ function processResponse(response){
                 results['processing_speed['+index+']'] = getAverageProcessingSpeed();
             }
 
-            status("Finished map job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", jobs left: " + jobs_left, LOG_IMPORTANT);
+            status("Finished job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", jobs left: " + jobs_left, LOG_IMPORTANT);
             // status("result for map: " + result, LOG_NOT_IMPORTANT);
             processedTotal++;
         }
