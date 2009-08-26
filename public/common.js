@@ -101,7 +101,7 @@ function processResponse(response){
           status("Job finalized in " + input.duration + " with result: " + input.result, LOG_VERY_IMPORTANT)
           timeFinished = (new Date).getTime();
 
-	        status(json['stats'], LOG_VERY_IMPORTANT);
+	        //status(json['stats'], LOG_VERY_IMPORTANT);
 
 	        if(processedTotal>0){
 		        status("You processed a total of <em>" + processedTotal + "</em> packages.", LOG_VERY_IMPORTANT);
