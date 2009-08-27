@@ -48,7 +48,8 @@ function processResponse(response){
     switch(phase){
       case 'map':
         var jobs_left = json.jobs_left;
-        var eta = Math.floor(json.eta / 1000 / 60);
+        var eta_minutes = Math.floor(json.eta / 1000 / 60);
+        var eta_hours = Math.floor(eta_minutes / 60);
 
         var results = {};
         for(var index in json.jobs){
@@ -76,7 +77,7 @@ function processResponse(response){
                 results['processing_speed['+index+']'] = getAverageProcessingSpeed();
             }
 
-            status("Finished job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", eta: " + eta + "min, jobs left: " + jobs_left, LOG_IMPORTANT);
+            status("Finished job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left, LOG_IMPORTANT);
             // status("result for map: " + result, LOG_NOT_IMPORTANT);
             processedTotal++;
         }

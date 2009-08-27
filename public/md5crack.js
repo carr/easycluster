@@ -4,47 +4,40 @@ var letters = [
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'
 ]
 
-// return array, but backwards
-function radixConvert(number, toBase){
-  if(number==0)
-    return [0];
+var codes = [
+    97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+    65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57,     35, 42
+]
 
-  var arr = [];
-  while(number!=0){
-    arr.push(number % toBase);
-    number = Math.floor(number / toBase);
-//    status(number);
-  }
-//  status(arr.join("-"));
-  return arr;
-}
+function checkmd5(number, word_size, md5){
+    toBase = letters.length;
+    var arr = new Array(word_size);
 
-function checkmd5(i, word_size, md5){
-//    var number = i.toString(letters.length);
-    var number = radixConvert(i, letters.length);
-    var padding_size = word_size - number.length;
-    for(var j=0;j<padding_size;j++){
-//      number = "0" + number;
-      number.unshift(0);
+    for(var j=0;j<arr.length;j++)
+        arr[j] = 0;
+
+    var pos = word_size-1;
+    while(number!=0){
+        arr[pos] = number % toBase; // number >> ?? (6)
+        number = Math.floor(number / toBase);
+        pos--;
     }
-//    status(number);
-//    number = number.split("");
 
-    var str = "";
-    for(var j=0;j<number.length;j++){
-      str += letters[number[j]];
-    }
-//    status(str);
+    var bin = Array();
+//      var mask = (1 << chrsz) - 1;
+      for(var i = 0; i < word_size * chrsz; i += chrsz)
+//        bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);
+        bin[i>>5] |= (codes[arr[(i / chrsz)]]) << (i%32);
 
-    if(hex_md5(str)==md5)
-      return str;
-    else
-      return null;
+//    return hex_md5(str)==md5 ? str : null;
+    return binl2hex(core_md5(bin, word_size * 8))==md5 ? binl2str(bin) : null;
 }
 
 function check_range(start, end, word_size, md5){
+    var res;
     for(var i=start;i<end;i++){
-      var res = checkmd5(i, word_size, md5);
+      res = checkmd5(i, word_size, md5);
       if(res!=null)
         return res;
     }

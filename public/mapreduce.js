@@ -44,7 +44,6 @@ ScriptLoader.load('/javascripts/jquery');
 ScriptLoader.load('/common');
 ScriptLoader.load('/'+params['lib']);
 ScriptLoader.load('/md5.js');
-ScriptLoader.load('/permutation.js');
 ScriptLoader.load('/md5crack.js');
 
 window.onload = function(){
