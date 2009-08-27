@@ -11,8 +11,10 @@ var logLevel = LOG_SHOW_ALL;
 var processingSpeeds = [];
 var PROCESSING_SPEEDS_LENGTH = 10;
 
+var domain = 'http://localhost:4567';
+
 function emit(phase, data){
-    $.post('/emit/' + phase + '?user=' + params.user, data, function(response){
+    $.post(domain + '/emit/' + phase + '?user=' + params.user, data, function(response){
 	    switch(phase){
 	        case 'reduce':
 	        case 'finalize':
@@ -113,7 +115,7 @@ function processResponse(response){
 }
 
 function go(){
-    $.post('/emit/reduce?user='+params.user, function(response){
+    $.post(domain + '/emit/reduce?user='+params.user, function(response){
       processResponse(response);
     });
 }

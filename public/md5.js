@@ -237,6 +237,14 @@ function binl2hex(binarray)
 }
 
 /*
+ * Convert a hex string to an array of little-endian words
+ */
+function hex2binl(str){
+  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+  var binaryarray = new Array();
+}
+
+/*
  * Convert an array of little-endian words to a base-64 string
  */
 function binl2b64(binarray)

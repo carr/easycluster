@@ -119,3 +119,7 @@ Ideja je snimati zadnjih 10 "brzina" obrade zadatka. Brzina je broj zadataka / v
 
 ** 2 jezgre, jedino ima smisla na njima to raditi u 2 procesa, sve vise je bacanje resursa
 
+
+"Access to restricted URI denied" code: "1012
+za XHR error
+

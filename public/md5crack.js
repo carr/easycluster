@@ -1,7 +1,7 @@
 var letters = [
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',         '#', '*'
 ]
 
 var codes = [
@@ -10,15 +10,12 @@ var codes = [
     48, 49, 50, 51, 52, 53, 54, 55, 56, 57,     35, 42
 ]
 
-function checkmd5(number, word_size, md5){
+function checkmd5(number, word_size, md5, md5_bin){
     toBase = letters.length;
     var arr = new Array(word_size);
 
-    for(var j=0;j<arr.length;j++)
-        arr[j] = 0;
-
     var pos = word_size-1;
-    while(number!=0){
+    while(pos >= 0){ // number!=0
         arr[pos] = number % toBase; // number >> ?? (6)
         number = Math.floor(number / toBase);
         pos--;
@@ -32,12 +29,22 @@ function checkmd5(number, word_size, md5){
 
 //    return hex_md5(str)==md5 ? str : null;
     return binl2hex(core_md5(bin, word_size * 8))==md5 ? binl2str(bin) : null;
+
+   /* bin = core_md5(bin, word_size*8);
+    for(var i=0;i<bin.length;i++){
+        if(bin[i]!=md5_bin[i])
+            return null
+    }
+    return binl2str(bin);*/
+
+//    return core_md5_compare(bin, md5, word_size * 8) ? binl2str(bin) : null;
 }
 
 function check_range(start, end, word_size, md5){
     var res;
+
     for(var i=start;i<end;i++){
-      res = checkmd5(i, word_size, md5);
+      res = checkmd5(i, word_size, md5, str2binl(md5));
       if(res!=null)
         return res;
     }
