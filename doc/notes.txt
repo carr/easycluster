@@ -1,5 +1,7 @@
+Test merganja
+
 = Tokyocabinet
-skines tokyocabinet
+skines tokyocabinetxxxx
 ./configure
 make
 make check
