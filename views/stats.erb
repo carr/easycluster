@@ -45,10 +45,13 @@
 
 <h2>Jobs in progress</h2>
 <ul>
+<% total_jobs = 0 %>
 <% @db.jobs_in_progress do |key, record| %>
   <li><%= key + " " + record %></li>
+  <% total_jobs+=1 %>
 <% end %>
 </ul>
+<h3>Total jobs in progress: <%= total_jobs %></h3>
 
 <h2>Jobs timed out</h2>
 <ul>
