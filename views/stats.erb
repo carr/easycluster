@@ -1,5 +1,11 @@
 <h1>Stats</h1>
 <dl>
+  <dt>Searching for word</dt>
+  <dd><%= @db.word %> / <%= @db.hash %></dd>
+
+  <dt>Jobs left / Total jobs</dt>
+  <dd><%= @db.jobs_left %> / <%= @db.total_jobs %> (<%= Float.round((@db.jobs_left.to_f*100 / @db.total_jobs), 2) %>)%</dd>
+
   <dt>Client number</dt>
   <dd><%= @db.client_number %></dd>
 
@@ -9,19 +15,50 @@
   <dt>Processing time</dt>
   <dd><%= @db.processing_time / 1000 %> sec</dd>
 
-  <dt>Time started</dt>
-  <dd><%= Time.at(@db.time_started) %></dd>
+  <% if @db.job_started %>
+    <dt>Time started</dt>
+    <dd><%= Time.at(@db.time_started) %></dd>
 
-  <dt>Time finished</dt>
-  <dd><%= Time.at(@db.time_finished) %></dd>
+    <% if @db.eta %>
+    <dt>Eta</dt>
+    <dd><%= Float.round(@db.eta / 1000 / 60, 2) %> minutes, <%= Float.round(@db.eta / 1000 / 60 / 60, 2) %> hours</dd>
+    <% end %>
 
-  <dt>Duration</dt>
-  <dd><%= @db.duration / 1000 %> sec</dd>
 
-  <dt>Communication is<dt>
-  <dd><%= @db.communication_percentage %>%</dd>
+    <% if @db.time_finished %>
+      <dt>Time finished</dt>
+      <dd><%= Time.at(@db.time_finished) %></dd>
 
-  <dt>Result is<dt>
-  <dd><%= @db.result %></dd>
-<dl>
+      <dt>Duration</dt>
+      <dd><%= @db.duration / 1000 %> sec</dd>
+
+      <dt>Result is</dt>
+      <dd><%= @db.result %></dd>
+    <% end %>
+
+    <dt>Communication is</dt>
+    <dd><%= @db.communication_percentage %>%</dd>
+  <% else %>
+    <dt>Job not started yet</dt>
+  <% end %>
+</dl>
+
+<h2>Jobs in progress</h2>
+<ul>
+<% @db.jobs_in_progress do |key, record| %>
+  <li><%= key + " " + record %></li>
+<% end %>
+</ul>
+
+<h2>Jobs timed out</h2>
+<ul>
+<% @db.jobs_timed_out do |key, record| %>
+  <li><%= key + " " + record %></li>
+<% end %>
+</ul>
+
+
+<script type="text/javascript">
+  reloadAfter(5000);
+</script>
 

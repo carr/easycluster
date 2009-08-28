@@ -1,5 +1,7 @@
 <html>
   <head>
+      <script type="text/javascript" src="/common.js"></script>
+      <script type="text/javascript" src="/javascripts/jquery.js"></script>
     <% if @include_javascript %>
       <script type="text/javascript" src="/mapreduce.js?lib=<%= @job_name %>&user=<%= params[:user]  %>"></script>
     <% end %>

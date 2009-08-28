@@ -1,10 +1,14 @@
 require "tokyotyrant"
 include TokyoTyrant
 class Db < RDB
-  [:min_range, :max_range, :result, :jobs_left, :time_started, :time_finished,
+  TIMEOUT = 5000
+
+  VARIABLES = [:min_range, :max_range, :result, :jobs_left, :time_started, :time_finished,
     :hash, :word_size, :word, :digits_count, :duration, :client_processing_time, :processing_time,
-    :job_started, :client_number, :eta, :processing_time_count, :eta_jobs_started, :eta_started
-  ].each do |name|
+    :job_started, :client_number, :eta, :processing_time_count, :eta_jobs_started, :eta_started, :total_jobs
+  ]
+
+  VARIABLES.each do |name|
     class_eval %|
       def #{name}
         var = get("#{name}")
@@ -30,6 +34,22 @@ class Db < RDB
     return nil unless job_started
 
     (processing_time - client_processing_time) *100 / processing_time
+  end
+
+  def jobs_in_progress
+    each do |key, record|
+      if key=~/job;/
+        yield(key, record)
+      end
+    end
+  end
+
+  def jobs_timed_out
+    jobs_in_progress do |key, record|
+      if (Time.now.to_i*1000 - record.to_i) > 5000
+        yield(key, record)
+      end
+    end
   end
 end
 

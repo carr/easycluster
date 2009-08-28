@@ -13,6 +13,10 @@ var PROCESSING_SPEEDS_LENGTH = 10;
 
 var domain = 'http://localhost:4567';
 
+function reloadAfter(interval){
+    setInterval("window.location.reload();", interval);
+}
+
 function emit(phase, data){
     $.post(domain + '/emit/' + phase + '?user=' + params.user, data, function(response){
 	    switch(phase){
@@ -43,7 +47,7 @@ function getAverageProcessingSpeed(){
 
 function processResponse(response){
     eval(response);
-
+    timeoutCount = 0;
     var phase = json['phase'];
     var input = json['data'];
 
@@ -79,8 +83,8 @@ function processResponse(response){
                 results['processing_speed['+index+']'] = getAverageProcessingSpeed();
             }
 
-            status("Finished job " + filename + " in " + results['processing_time['+index+']'] + ", job size " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left, LOG_IMPORTANT);
-            // status("result for map: " + result, LOG_NOT_IMPORTANT);
+
+            status("Finished " + filename + " in " + results['processing_time['+index+']'] + ", jobSize " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left + " speed " + results['processing_speed['+index+']'], LOG_IMPORTANT);
             processedTotal++;
         }
 
@@ -120,12 +124,19 @@ function go(){
     });
 }
 
+var timeoutCount = 0;
 function startWork(){
   $.ajaxSetup({
     timeout: 30000,
     error: function(request, errorType, errorThrown){
       status("Timeout happened", LOG_VERY_IMPORTANT);
-      //go();
+      if(timeoutCount < 5){
+        timeoutCount++;
+        setTimeout("go()", 5000);
+      }else{
+        status("Tried after 5 timeouts, got fucked, gave up", LOG_VERY_IMPORTANT);
+//        window.location.reload();
+      }
     }
   });
 

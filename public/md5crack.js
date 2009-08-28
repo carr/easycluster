@@ -53,7 +53,7 @@ function check_range(start, end, word_size, md5){
 
 function map(id, data){
   var arr = id.split(";");
-  var res = check_range(parseInt(arr[1]), parseInt(arr[2]), parseInt(arr[0]), data['hash']);
+  var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), data['hash']);
   return res;
 }
 function startTask(){
