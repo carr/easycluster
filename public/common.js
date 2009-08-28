@@ -11,7 +11,7 @@ var logLevel = LOG_SHOW_ALL;
 var processingSpeeds = [];
 var PROCESSING_SPEEDS_LENGTH = 10;
 
-var domain = 'http://localhost:4567';
+var domain = "";
 
 function reloadAfter(interval){
     setInterval("window.location.reload();", interval);
