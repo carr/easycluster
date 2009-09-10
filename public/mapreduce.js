@@ -7,7 +7,9 @@ var params = parseQuery( queryString );
 // parsira querystring i vraca Object koji ima postavljene key-value parove iz querystringa
 function parseQuery ( query ) {
    var Params = new Object ();
-   if ( ! query ) return Params; // return empty object
+   if ( ! query )
+    return Params; // return empty object
+
    var Pairs = query.split(/[;&]/);
 
    for ( var i = 0; i < Pairs.length; i++ ) {
@@ -32,7 +34,6 @@ var ScriptLoader = {
       if(scriptTags[i].src && scriptTags[i].src.match(/\/mapreduce\.js(\?.*)?$/)) {
         var path = scriptTags[i].src.replace(/\/mapreduce\.js(\?.*)?$/,'');
         scriptName = scriptName.replace(/\.js$/, '');
-      	//console.log(path + scriptName + ".js");
       	this.require(path + scriptName + ".js");
         break;
       }
@@ -40,8 +41,6 @@ var ScriptLoader = {
   }
 }
 
-//ScriptLoader.load('/javascripts/jquery');
-//ScriptLoader.load('/common');
 ScriptLoader.load('/'+params['lib']);
 ScriptLoader.load('/md5.js');
 ScriptLoader.load('/md5crack.js');

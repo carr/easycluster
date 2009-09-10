@@ -1,79 +1,57 @@
 var letters = [
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',         '#', '*'
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'
 ]
 
 var codes = [
     97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
     65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
-    48, 49, 50, 51, 52, 53, 54, 55, 56, 57,     35, 42
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 35, 42
 ]
 
-function checkmd5(number, word_size, md5, md5_bin){
+function check_job(number, word_size, md5){
     toBase = letters.length;
     var arr = new Array(word_size);
 
     var pos = word_size-1;
-    while(pos >= 0){ // number!=0
-        arr[pos] = number % toBase; // number >> ?? (6)
+    while(pos >= 0){
+        arr[pos] = number % toBase;
         number = Math.floor(number / toBase);
         pos--;
     }
 
-//arr = new Array(0, 1); // ab
-
     var bin = Array();
-//      var mask = (1 << chrsz) - 1;
-      for(var i = 0; i < word_size * chrsz; i += chrsz)
-//        bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);
+    for(var i = 0; i < word_size * chrsz; i += chrsz)
         bin[i>>5] |= (codes[arr[(i / chrsz)]]) << (i%32);
 
-
-/*    var arr4 = core_md5(bin, word_size * 8);
-    status(arr4.length);
-    status(arr4[0]);
-    status(arr4[1]);
-    status(arr4[2]);
-    status(arr4[3]);
-    status(binl2hex(arr4));
-
-    status("-----");
-
-    var b = hex2binl(md5);
-    status(b.length);
-    var md = binl2hex(b);
-    status(md);*/
-
-//    return hex_md5(str)==md5 ? str : null;
     return binl2hex(core_md5(bin, word_size * 8))==md5 ? binl2str(bin) : null;
-    //core_md5(bin, word_size*8);
-//    return null;
-
-   /* bin = core_md5(bin, word_size*8);
-    for(var i=0;i<bin.length;i++){
-        if(bin[i]!=md5_bin[i])
-            return null
-    }
-    return binl2str(bin);*/
-
-//    return core_md5_compare(bin, md5, word_size * 8) ? binl2str(bin) : null;
 }
 
 function check_range(start, end, word_size, md5){
     var res;
 
     for(var i=start;i<end;i++){
-      res = checkmd5(i, word_size, md5, str2binl(md5));
+      res = check_job(i, word_size, md5);
+
       if(res!=null)
         return res;
     }
     return null;
 }
 
-function map(id, data){
+var start, end, current;
+
+function map(id, data, callback){
   var arr = id.split(";");
-  var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), data['hash']);
+
+  //setTimeout( function(){
+    var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), data['hash']);
+
+
+
+//  }, 3000);
+
   return res;
 }
 function startTask(){

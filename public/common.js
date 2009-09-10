@@ -7,7 +7,7 @@ var LOG_NOT_IMPORTANT = 1;
 var LOG_IMPORTANT = 2;
 var LOG_VERY_IMPORTANT = 3;
 
-var logLevel = LOG_NOTHING;
+var logLevel = LOG_SHOW_ALL;
 
 var processingSpeeds = [];
 var PROCESSING_SPEEDS_LENGTH = 10;
@@ -65,8 +65,6 @@ function processResponse(response){
             var timeStarted = json.jobs[index].time_started;
             var jobSize = json.jobs[index].job_size;
 
-//            status("Doing map for: " + filename + ", jobs left: " + jobs_left, LOG_IMPORTANT)
-
             results['filename['+index+']'] = filename;
 
             timeProcessingStarted = (new Date).getTime();
@@ -92,16 +90,16 @@ function processResponse(response){
         emit('reduce', results);
         break;
 
-    case 'reduce':
-        status("Doing reduce for input " + input, LOG_NOT_IMPORTANT)
-        var result = reduce(input);
-        emit('finalize', {'sum': result});
-        break;
+//    case 'reduce':
+//        status("Doing reduce for input " + input, LOG_NOT_IMPORTANT)
+//        var result = reduce(input);
+//        emit('finalize', {'sum': result});
+//        break;
 
-    case 'wait':
-        status("...Waiting 1 seconds for all jobs to finish...");
-        setTimeout('go()', 1000);
-        break;
+//    case 'wait':
+//        status("...Waiting 1 seconds for all jobs to finish...");
+//        setTimeout('go()', 1000);
+//        break;
 
     case 'done':
         if(input.length>100)
