@@ -22,6 +22,9 @@
     <% if @db.eta %>
     <dt>Eta</dt>
     <dd><%= Float.round(@db.eta / 1000 / 60, 2) %> minutes, <%= Float.round(@db.eta / 1000 / 60 / 60, 2) %> hours</dd>
+
+    <dt>Speed</dt>
+    <dd><%= @db.speed %> jobs / ms</dd>
     <% end %>
 
 

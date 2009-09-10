@@ -2,11 +2,12 @@ var processedTotal;
 var timeStarted, timeFinished, timeProcessingStarted, timeProcessingFinished;
 
 var LOG_SHOW_ALL;
+var LOG_NOTHING = 0;
 var LOG_NOT_IMPORTANT = 1;
 var LOG_IMPORTANT = 2;
 var LOG_VERY_IMPORTANT = 3;
 
-var logLevel = LOG_SHOW_ALL;
+var logLevel = LOG_NOTHING;
 
 var processingSpeeds = [];
 var PROCESSING_SPEEDS_LENGTH = 10;
@@ -158,6 +159,9 @@ function timeStop(flag){
 }
 
 function status(text, level){
+    if(logLevel == LOG_NOTHING)
+        return;
+
     if(level==undefined)
       level = LOG_NOT_IMPORTANT;
 

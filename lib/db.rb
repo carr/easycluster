@@ -5,7 +5,8 @@ class Db < RDB
 
   VARIABLES = [:min_range, :max_range, :result, :jobs_left, :time_started, :time_finished,
     :hash, :word_size, :word, :digits_count, :duration, :client_processing_time, :processing_time,
-    :job_started, :client_number, :eta, :processing_time_count, :eta_jobs_started, :eta_started, :total_jobs
+    :job_started, :client_number, :eta, :processing_time_count, :eta_jobs_started, :eta_started, :total_jobs,
+    :speed
   ]
 
   VARIABLES.each do |name|

@@ -21,14 +21,34 @@ function checkmd5(number, word_size, md5, md5_bin){
         pos--;
     }
 
+//arr = new Array(0, 1); // ab
+
     var bin = Array();
 //      var mask = (1 << chrsz) - 1;
       for(var i = 0; i < word_size * chrsz; i += chrsz)
 //        bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);
         bin[i>>5] |= (codes[arr[(i / chrsz)]]) << (i%32);
 
+
+/*    var arr4 = core_md5(bin, word_size * 8);
+    status(arr4.length);
+    status(arr4[0]);
+    status(arr4[1]);
+    status(arr4[2]);
+    status(arr4[3]);
+    status(binl2hex(arr4));
+
+    status("-----");
+
+    var b = hex2binl(md5);
+    status(b.length);
+    var md = binl2hex(b);
+    status(md);*/
+
 //    return hex_md5(str)==md5 ? str : null;
     return binl2hex(core_md5(bin, word_size * 8))==md5 ? binl2str(bin) : null;
+    //core_md5(bin, word_size*8);
+//    return null;
 
    /* bin = core_md5(bin, word_size*8);
     for(var i=0;i<bin.length;i++){

@@ -135,24 +135,19 @@ function core_md5(x, len)
 /*
  * These functions implement the four basic operations the algorithm uses.
  */
-function md5_cmn(q, a, b, x, s, t)
-{
+function md5_cmn(q, a, b, x, s, t){
   return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s),b);
 }
-function md5_ff(a, b, c, d, x, s, t)
-{
+function md5_ff(a, b, c, d, x, s, t){
   return md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
 }
-function md5_gg(a, b, c, d, x, s, t)
-{
+function md5_gg(a, b, c, d, x, s, t){
   return md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
 }
-function md5_hh(a, b, c, d, x, s, t)
-{
+function md5_hh(a, b, c, d, x, s, t){
   return md5_cmn(b ^ c ^ d, a, b, x, s, t);
 }
-function md5_ii(a, b, c, d, x, s, t)
-{
+function md5_ii(a, b, c, d, x, s, t){
   return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
 }
 
@@ -236,12 +231,38 @@ function binl2hex(binarray)
   return str;
 }
 
+function hexCharIndex(chr){
+  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+  for(var i=0;i<hex_tab.length;i++){
+      if(hex_tab.charAt(i) == chr){
+          return i;
+      }
+  }
+}
+
 /*
  * Convert a hex string to an array of little-endian words
  */
 function hex2binl(str){
   var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
   var binaryarray = new Array();
+  status("hash " + str);
+  // hash je dug 32 znaka bin array je dug velik 4 znaka
+  for(var i=0; i < str.length / 4 / 2; i+=2){
+    var c1 = str.charAt(i);
+    var c2 = str.charAt(i+1);
+    status(c1 + " " + c2);
+
+    c1 = hexCharIndex(c1);
+    c2 = hexCharIndex(c2);
+
+    binaryarray[i >> 2] = 0;
+
+    // ovaj dio i >> 2 zapravo ga gura u 0, 1, 2, 3 jer se i krece 0-15
+//   (binarray[i>>2] >> ((i%4)*8+4)) & 0xF
+  }
+
+  return binaryarray;
 }
 
 /*
