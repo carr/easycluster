@@ -10,6 +10,14 @@ var codes = [
     48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 35, 42
 ]
 
+function arrToString(arr){
+    var str = '';
+    for(var i =0;i<arr.length;i++){
+        str+=letters[arr[i]];
+    }
+    return str;
+}
+
 function check_job(number, word_size, md5){
     toBase = letters.length;
     var arr = new Array(word_size);
@@ -25,7 +33,7 @@ function check_job(number, word_size, md5){
     for(var i = 0; i < word_size * chrsz; i += chrsz)
         bin[i>>5] |= (codes[arr[(i / chrsz)]]) << (i%32);
 
-    return binl2hex(core_md5(bin, word_size * 8))==md5 ? binl2str(bin) : null;
+    return binl2hex(core_md5(bin, word_size * 8))==md5 ? arrToString(arr) : null;
 }
 
 function check_range(start, end, word_size, md5){
@@ -34,19 +42,21 @@ function check_range(start, end, word_size, md5){
     for(var i=start;i<end;i++){
       res = check_job(i, word_size, md5);
 
-      if(res!=null)
+      if(res!=null){
         return res;
+      }
+
     }
     return null;
 }
 
 var start, end, current;
 
-function map(id, data, callback){
+function map(id, hash){
   var arr = id.split(";");
 
   //setTimeout( function(){
-    var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), data['hash']);
+    var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), hash);
 
 
 
