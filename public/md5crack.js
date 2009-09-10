@@ -19,6 +19,7 @@ function arrToString(arr){
 }
 
 function check_job(number, word_size, md5){
+    var tmp = number;
     toBase = letters.length;
     var arr = new Array(word_size);
 
@@ -47,7 +48,7 @@ function check_range(start, end, word_size, md5, callback){
 
     var busy = false;
     var timer = setInterval(function(){
-        chunk_size = DEFAULT_CHUNK_SIZE / (DEFAULT_SPEED / lastAverageProcessingSpeed);
+        chunk_size = Math.floor(DEFAULT_CHUNK_SIZE / (DEFAULT_SPEED / lastAverageProcessingSpeed));
 
         if(!busy && !pauseProcessing){
             busy = true;
