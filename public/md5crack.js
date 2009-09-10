@@ -36,33 +36,46 @@ function check_job(number, word_size, md5){
     return binl2hex(core_md5(bin, word_size * 8))==md5 ? arrToString(arr) : null;
 }
 
-function check_range(start, end, word_size, md5){
+var DEFAULT_CHUNK_SIZE = 1000;
+var DEFAULT_SPEED = 15;
+
+var chunk_size = DEFAULT_CHUNK_SIZE; // 400
+var CHUNK_INTERVAL = 1; // 200
+
+function check_range(start, end, word_size, md5, callback){
     var res;
 
-    for(var i=start;i<end;i++){
-      res = check_job(i, word_size, md5);
+    var busy = false;
+    var timer = setInterval(function(){
+        chunk_size = DEFAULT_CHUNK_SIZE / (DEFAULT_SPEED / lastAverageProcessingSpeed);
 
-      if(res!=null){
-        return res;
-      }
+        if(!busy && !pauseProcessing){
+            busy = true;
+            for(var i=start; i<(start+chunk_size); i++){
+                if(i>end){
+                    clearInterval(timer);
+                    callback.call();
+                    break;
+                }
 
-    }
-    return null;
+                result = check_job(i, word_size, md5);
+
+                if(result!=null){
+                    // we have a result
+                    clearInterval(timer);
+                    callback.call();
+                }
+            }
+            start+=chunk_size;
+
+            busy = false;
+        }
+
+    }, CHUNK_INTERVAL);
 }
-
-var start, end, current;
-
-function map(id, hash){
+function check_package(id, hash, callback){
   var arr = id.split(";");
-
-  //setTimeout( function(){
-    var res = check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), hash);
-
-
-
-//  }, 3000);
-
-  return res;
+  check_range(parseInt(arr[2]), parseInt(arr[3]), parseInt(arr[1]), hash, callback);
 }
 function startTask(){
     status("Started");

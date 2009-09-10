@@ -1,4 +1,3 @@
-var processedTotal;
 var timeStarted, timeFinished, timeProcessingStarted, timeProcessingFinished;
 
 var LOG_SHOW_ALL;
@@ -10,11 +9,17 @@ var LOG_VERY_IMPORTANT = 3;
 var logLevel = LOG_SHOW_ALL;
 
 var processingSpeeds = [];
+var lastAverageProcessingSpeed = 1;
 var PROCESSING_SPEEDS_LENGTH = 10;
 
 var domain = "";
 
 var started, ended;
+
+var result = null;
+
+var pauseProcessing = false;
+
 function timeStart(){
   started = new Date().getTime();
 }
@@ -55,7 +60,8 @@ function getAverageProcessingSpeed(){
     for(var i=0;i< processingSpeeds.length; i++){
         sum+= processingSpeeds[i];
     }
-    return sum / processingSpeeds.length;
+    lastAverageProcessingSpeed = sum / processingSpeeds.length;
+    return lastAverageProcessingSpeed;
 }
 
 function processResponse(response){
@@ -70,32 +76,34 @@ function processResponse(response){
         var eta_minutes = Math.floor(json.eta / 1000 / 60);
         var eta_hours = Math.floor(eta_minutes / 60);
 
-        var filename = json.filename;
+        var id = json.id;
         var hash = json.hash;
         var timeStarted = json.time_started;
         var jobSize = json.job_size;
 
         var results = {};
-        results['filename'] = filename;
+        results['id'] = id;
 
         timeProcessingStarted = (new Date).getTime();
-        var result = map(filename, hash);
-        var processingDuration = (new Date).getTime()-timeProcessingStarted;
+        result = null;
+        check_package(id, hash, function(){
+            var processingDuration = (new Date).getTime()-timeProcessingStarted;
 
-        pushProcessingSpeed(jobSize / processingDuration);
+            pushProcessingSpeed(jobSize / processingDuration);
 
-        results['processing_time'] = processingDuration;
-        results['result'] = result;
-        results['time_started'] = timeStarted;
+            results['processing_time'] = processingDuration;
+            results['result'] = result;
+            results['time_started'] = timeStarted;
 
-        if(processingSpeeds.length >= PROCESSING_SPEEDS_LENGTH){
-            results['processing_speed'] = getAverageProcessingSpeed();
-        }
+            if(processingSpeeds.length >= PROCESSING_SPEEDS_LENGTH){
+                results['processing_speed'] = getAverageProcessingSpeed();
+            }
 
-        status("Finished " + filename + " in " + results['processing_time'] + ", jobSize " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left + " speed " + results['processing_speed'], LOG_IMPORTANT);
-        processedTotal++;
+            status("Finished " + id + " in " + results['processing_time'] + ", jobSize " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left + " speed " + results['processing_speed'], LOG_IMPORTANT);
 
-        emit('reduce', results);
+            emit('reduce', results);
+
+        });
         break;
 
     case 'done':
@@ -104,10 +112,6 @@ function processResponse(response){
         else
           status("Job finalized in " + data.duration + " with result: " + data.result, LOG_VERY_IMPORTANT)
           timeFinished = (new Date).getTime();
-
-	      if(processedTotal>0){
-            status("You processed a total of <em>" + processedTotal + "</em> packages.", LOG_VERY_IMPORTANT);
-          }
 	      break;
     }
 }
@@ -134,9 +138,12 @@ function startWork(){
     }
   });
 
-    processedTotal = 0;
-    timeStarted = (new Date).getTime();
-    go();
+  timeStarted = (new Date).getTime();
+  go();
+}
+
+function togglePause(){
+    pauseProcessing = !pauseProcessing;
 }
 
 function status(text, level){
