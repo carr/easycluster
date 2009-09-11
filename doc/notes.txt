@@ -1,5 +1,3 @@
-Test merganja
-
 = Tokyocabinet
 skines tokyocabinetxxxx
 ./configure
@@ -10,11 +8,6 @@ sudo make install
 skines ruby binding
 napravis gem iz gemspeca
 instaliras gem
-
- ldconfig /usr/local/lib
-
-= Disable/enable lock kod sinatre
-Bitno je ostvariti multithreading
 
 
 = Md5 crackanje
