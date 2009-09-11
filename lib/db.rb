@@ -33,6 +33,7 @@ class Db < RDB
 
   def communication_percentage # ne valja
     return nil unless job_started
+    return nil if processing_time.nil? || processing_time==0
 
     (processing_time - client_processing_time) *100 / processing_time
   end

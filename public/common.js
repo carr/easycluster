@@ -12,13 +12,12 @@ var processingSpeeds = [];
 var lastAverageProcessingSpeed = 1;
 var PROCESSING_SPEEDS_LENGTH = 10;
 
-var domain = "";
-
 var started, ended;
-
 var result = null;
-
 var pauseProcessing = false;
+
+var timeoutCount = 0;
+var printedJobFinalized = false;
 
 function timeStart(){
   started = new Date().getTime();
@@ -31,20 +30,9 @@ function timeStop(flag){
     status(flag + ": trajanje " + (ended-started) + "ms")
 }
 
-function reloadAfter(interval){
-    setInterval("window.location.reload();", interval);
-}
-
-function emit(phase, data){
-    $.post(domain + '/emit/' + phase + '?user=' + params.user, data, function(response){
-	    switch(phase){
-	        case 'reduce':
-	        case 'finalize':
-	        case 'done':
-	          //status("Finished emit!", LOG_NOT_IMPORTANT);
-		      processResponse(response);
-		    break;
-	    }
+function emit(data){
+    $.post('/emit?user=' + params.user, data, function(response){
+        processResponse(response);
     });
 }
 
@@ -65,13 +53,13 @@ function getAverageProcessingSpeed(){
 }
 
 function processResponse(response){
-    eval(response);
     timeoutCount = 0;
+    eval(response);
     var phase = json['phase'];
     var data = json['data'];
 
     switch(phase){
-      case 'map':
+      case 'work':
         var jobs_left = json.jobs_left;
         var eta_minutes = Math.floor(json.eta / 1000 / 60);
         var eta_hours = Math.floor(eta_minutes / 60);
@@ -99,41 +87,46 @@ function processResponse(response){
                 results['processing_speed'] = getAverageProcessingSpeed();
             }
 
-            status("Finished " + id + " in " + results['processing_time'] + ", jobSize " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left + " speed " + results['processing_speed'], LOG_IMPORTANT);
+            status("Finished " + id + " in " + results['processing_time'] + ", jobSize " + jobSize + ", eta: " + eta_minutes + "min (" + eta_hours + "h), jobs left: " + jobs_left + " speed " + Math.round(results['processing_speed']*100)/100, LOG_IMPORTANT);
 
-            emit('reduce', results);
+            emit(results);
 
         });
         break;
 
     case 'done':
-        if(data.length>100)
-          status("Job finalized with a result", LOG_VERY_IMPORTANT);
-        else
-          status("Job finalized in " + data.duration + " with result: " + data.result, LOG_VERY_IMPORTANT)
-          timeFinished = (new Date).getTime();
-	      break;
+        if(!printedJobFinalized){
+            if(data.length>100)
+              status("Job finalized with a result", LOG_VERY_IMPORTANT);
+            else
+              status("Job finalized in " + data.duration + " with result: " + data.result, LOG_VERY_IMPORTANT)
+
+            printedJobFinalized = true;
+        }
+
+	    setTimeout('go()', 2000);
+        break;
     }
 }
 
 function go(){
-    $.post(domain + '/emit/reduce?user='+params.user, function(response){
+    console.log("go");
+    $.post('/emit?user='+params.user, function(response){
       processResponse(response);
     });
 }
 
-var timeoutCount = 0;
 function startWork(){
   $.ajaxSetup({
     timeout: 30000,
     error: function(request, errorType, errorThrown){
       status("Timeout happened", LOG_VERY_IMPORTANT);
+
       if(timeoutCount < 5){
         timeoutCount++;
         setTimeout("go()", 5000);
       }else{
-        status("Tried after 5 timeouts, got fucked, gave up", LOG_VERY_IMPORTANT);
-//        window.location.reload();
+        status("Tried after 5 timeouts, gave up", LOG_VERY_IMPORTANT);
       }
     }
   });
@@ -144,6 +137,10 @@ function startWork(){
 
 function togglePause(){
     pauseProcessing = !pauseProcessing;
+}
+
+function reloadAfter(interval){
+    setInterval("window.location.reload();", interval);
 }
 
 function status(text, level){
