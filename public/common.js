@@ -110,7 +110,6 @@ function processResponse(response){
 }
 
 function go(){
-    console.log("go");
     $.post('/emit?user='+params.user, function(response){
       processResponse(response);
     });
